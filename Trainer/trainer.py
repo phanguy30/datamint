@@ -6,8 +6,18 @@ import random
 
 class Trainer:
     def __init__(self, model: MLPNetwork, learning_rate=0.01, epochs=100, optimizer="SGD"):
+        """
+        Parameters:
+        model: instance of any model (default is MLPNetwork)
+        learning_rate: learning rate for optimizer
+        epochs: number of training epochs
+        optimizer: optimization algorithm to use ("SGD" supported)
+        """
+        
+        #Default model is MLPNetwork
         self.model = model
-
+        
+        #Set loss calculation based on model classification type
         if model.classification == "none":
             self.loss_cal = LinearLoss()
         elif model.classification == "sigmoid":
@@ -20,29 +30,42 @@ class Trainer:
         self.learning_rate = learning_rate
         self.epochs = epochs
 
+        # Set optimizer
         if optimizer == "SGD":
             self.optimizer = SGD(learning_rate=self.learning_rate)
         else:
             raise ValueError(f"Unknown optimizer: {optimizer}")
 
-        self.model_type = model.classification
-
+        
     def fit(self, X, y, batch_size=1):
+        """
+        Parameters:
+        X: list of input samples, each sample is a list of Values or floats/ints
+        y: list of target values (floats/ints)
+        batch_size: number of samples per batch for training
+        
+        Trains the model using mini-batch gradient descent.
+        """
         n = len(X)
+        
+        # Training loop
         for epoch in range(self.epochs):
             indices = list(range(n))
             random.shuffle(indices)
 
             epoch_loss = 0.0
-
+            
+            # Mini-batch training
             for start in range(0, n, batch_size):
                 end = min(start + batch_size, n)
                 batch_idx = indices[start:end]
-
+                
+                # Zero gradients before processing the batch
                 self.model.zero_grad()
 
                 batch_losses = []
-
+                
+                #Calculate loss for each sample in the batch
                 for i in batch_idx:
                     inputs = X[i]
                     target = y[i]
@@ -53,11 +76,14 @@ class Trainer:
                     batch_losses.append(loss)
                     epoch_loss += loss.data
 
+                # Compute average loss for the batch and backpropagate to get gradients
                 batch_loss = sum(batch_losses) / len(batch_losses)
                 batch_loss.backward()
-
+                
+                # Update model parameters
                 self.optimizer.step(self.model.parameters())
-
+                
+            # Monitor average loss for the epoch
             epoch_loss /= n
 
             if (epoch + 1) % 20 == 0 or epoch == 0:
