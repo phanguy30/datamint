@@ -131,9 +131,17 @@ class Value:
         
         return out
     
- 
-
+    def clamp(self):
+        """Avoid 0 or 1 values for numerical stability in log/sigmoid"""
+        epsilon = 1e-15
+        if self.data < epsilon:
+            return Value(epsilon)
+        elif self.data > 1 - epsilon:
+            return Value(1 - epsilon)
+        else:
+            return self
     
+
     #-------------------------------
     #Call this on the output node
     def backward(self):

@@ -38,11 +38,6 @@ class MLPNetwork:
         if len(x) != self.input_dim:
             raise ValueError(f"Input dimension {len(x)} does not match network input dimension {self.input_dim}.")
         
-        # If user passes raw numbers instead of Value objects, wrap them
-        if len(x) > 0 and not isinstance(x[0], Value):
-            x = [Value._as_value(xi) for xi in x]
-        
-        
 
         # Pass through all layers
         for layer in self.layers:
@@ -66,6 +61,13 @@ class MLPNetwork:
         for layer in self.layers:
             params.extend(layer.parameters())
         return params
+    
+    def gradients(self):
+        """Return all gradients from all parameters."""
+        grads = []
+        for p in self.parameters():
+            grads.append(p.grad)
+        return grads
 
     @staticmethod
     def softmax(vals):
