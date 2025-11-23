@@ -1,5 +1,5 @@
 import random
-from Value import Value
+from .Value import Value
 
 class Neuron:
     def __init__(self, nin, label = "", activation_type = 'tanh'):

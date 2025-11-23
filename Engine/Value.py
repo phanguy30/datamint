@@ -1,4 +1,5 @@
-from math import tanh, exp
+from math import tanh, exp, log
+
 
 class Value:
     def __init__(self, data, _children = (),_op= '' , label = '' ):
@@ -88,6 +89,7 @@ class Value:
         out._backward = _backward
         return out
     
+    
     #-------------------------------
         
     def tanh(self):
@@ -114,6 +116,16 @@ class Value:
         
         def _backward():
             self.grad += (out.data > 0) * out.grad
+        
+        out._backward = _backward
+        
+        return out
+    
+    def log(self):
+        out = Value(log(self.data), (self,), "log")
+        
+        def _backward():
+            self.grad += (1 / self.data) * out.grad
         
         out._backward = _backward
         

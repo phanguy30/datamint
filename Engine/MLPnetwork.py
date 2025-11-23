@@ -1,45 +1,87 @@
-from Layer import Layer
+from .Value import Value
+from .Layer import Layer
 
 class MLPNetwork:
-    def __init__(self,nin,nouts,label="",activation_type="tanh",classification=False):
+    def __init__(self, input_dim, n_neurons, label="", activation_type="tanh", classification="none"):
+        """
+        input_dim:      number of input features (int)
+        n_neurons:      list containing number of neurons in each layer, e.g. [16, 8, 1]
+        label:          string to label the network / layers
+        activation_type:activation function to use in hidden layers (e.g. "tanh", "relu")
+        classification: "none", "softmax" (multi-class), "sigmoid" (single-output binary)    
+        """
         self.classification = classification
-        sizes = [nin] + nouts
+        self.input_dim = input_dim
+        sizes = [input_dim] + n_neurons
+        
+        if n_neurons[-1] > 1 and classification == "sigmoid":
+            raise Warning("Sigmoid classification is only supported for single-output binary classification. For multi-class, use softmax.")
 
+        # Build layers: all hidden layers get activation; last layer is linear
         self.layers = [
             Layer(
                 sizes[i],
-                sizes[i+1],
+                sizes[i + 1],
                 label=f"{label}_L{i}",
-                activation_type=activation_type if i < len(nouts) - 1 else None
+                activation_type=activation_type if i < len(n_neurons) - 1 else None
             )
-            for i in range(len(nouts))
+            for i in range(len(n_neurons))
         ]
 
     def forward(self, x):
+        """
+        x can be:
+          - a list of Value
+          - a list/tuple/array of python floats/ints (will be wrapped into Value)
+        """
+        # If the input dimension does not match, raise error
+        if len(x) != self.input_dim:
+            raise ValueError(f"Input dimension {len(x)} does not match network input dimension {self.input_dim}.")
+        
+        # If user passes raw numbers instead of Value objects, wrap them
+        if len(x) > 0 and not isinstance(x[0], Value):
+            x = [Value._as_value(xi) for xi in x]
+        
+        
+
+        # Pass through all layers
         for layer in self.layers:
             x = layer(x)
 
-        if self.classification:
+        # x is now list[Value] representing final layer outputs (logits)
+        if self.classification == "softmax":
             x = self.softmax(x)
+
+        elif self.classification == "sigmoid":
+            # Only support single-output binary classification for now
+            if len(x) != 1:
+                raise Warning("Values correlate to multi-label outputs)")
+            x = [self.sigmoid(x[0])]
 
         return x
 
     def parameters(self):
-        """aggregate all parameters from all layers"""
+        """Aggregate all parameters from all layers."""
         params = []
         for layer in self.layers:
             params.extend(layer.parameters())
         return params
-    
+
     @staticmethod
     def softmax(vals):
+        # vals: list[Value]
         exps = [v.exp() for v in vals]
         total = exps[0]
         for e in exps[1:]:
             total = total + e
         return [e / total for e in exps]
-    
+
+    @staticmethod
+    def sigmoid(x):
+        # x: Value
+        return 1 / (1 + (-x).exp())
+
     def zero_grad(self):
-        """Set all gradients to zero use to reset after learning step"""
+        """Set all gradients to zero; call before/after each learning step."""
         for p in self.parameters():
-            p.grad = 0
+            p.grad = 0.0

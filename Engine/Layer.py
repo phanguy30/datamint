@@ -1,4 +1,4 @@
-from Neuron import Neuron
+from .Neuron import Neuron
 
 
 class Layer:
