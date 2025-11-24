@@ -138,7 +138,10 @@ class Trainer:
             return 1 if prob >= 0.5 else 0
 
         elif self.model.classification == "softmax":
-            return max(range(len(outputs)), key=lambda i: outputs[i].data)
+        # Convert Value objects to raw numbers
+            probs = [v.data for v in outputs]
+            #return the index of the max probability
+            return probs.index(max(probs))
 
         else:
             raise ValueError("Unknown classification type")
