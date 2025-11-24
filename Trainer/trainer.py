@@ -5,7 +5,7 @@ import random
 
 
 class Trainer:
-    def __init__(self, model: MLPNetwork, learning_rate=0.01, epochs=100, optimizer="SGD"):
+    def __init__(self, model: MLPNetwork, optimizer = SGD(learning_rate=0.01),  epochs=100):
         """
         Parameters:
         model: instance of any model (default is MLPNetwork)
@@ -17,6 +17,10 @@ class Trainer:
         #Default model is MLPNetwork
         self.model = model
         
+        #Default optimizer is SGD
+        self.optimizer = optimizer  
+        
+        
         #Set loss calculation based on model classification type
         if model.classification == "none":
             self.loss_cal = LinearLoss()
@@ -26,15 +30,9 @@ class Trainer:
             self.loss_cal = CrossEntropyLoss()
         else:
             raise ValueError(f"Unknown classification mode: {model.classification}")
-
-        self.learning_rate = learning_rate
+        
         self.epochs = epochs
 
-        # Set optimizer
-        if optimizer == "SGD":
-            self.optimizer = SGD(learning_rate=self.learning_rate)
-        else:
-            raise ValueError(f"Unknown optimizer: {optimizer}")
 
         
     def fit(self, X, y, batch_size=1):

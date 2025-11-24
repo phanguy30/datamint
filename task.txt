@@ -2,13 +2,13 @@ Name: Adding test function to train module
 
 Description: Add a function
 
-Assignment: 
+Assignment: Peter
 
-Status: Incomplete
+Status: Completed
 
 --------------------
 
-Name:
+Name: Creating class to test whether 2 datasets are the same
 
 Description:
 
@@ -17,7 +17,7 @@ Assignment:
 Status: Incomplete
 
 --------------------
-Name:
+Name: To create a model that can learn p(x,y)
 
 Description:
 
