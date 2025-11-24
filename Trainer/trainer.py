@@ -70,7 +70,7 @@ class Trainer:
                     inputs = X[i]
                     target = y[i]
 
-                    outputs = self.model.forward(inputs) 
+                    outputs = self.model.predict(inputs) 
 
                     loss = self.loss_cal(outputs, target)
                     batch_losses.append(loss)
@@ -88,3 +88,56 @@ class Trainer:
 
             if (epoch + 1) % 20 == 0 or epoch == 0:
                 print(f"Epoch {epoch+1}/{self.epochs}, Loss: {epoch_loss:.4f}")
+    
+    
+        
+        
+    def test(self, X, y):
+        """
+        Parameters:
+        X: list of input samples, each sample is a list of Values or floats/ints
+        y: list of target values (0 or 1)
+        
+        Returns:
+        Test statistics (e.g., accuracy, loss)
+        """
+        n = len(X)
+        
+        correct = 0
+        total_loss = 0.0
+        
+        for i in range(n):
+            inputs = X[i]
+            target = y[i]
+
+            outputs = self.model.predict(inputs)
+            
+            if self.model.classification == "sigmoid":
+                predicted_prob = outputs[0].data
+                predicted_label = 1 if predicted_prob >= 0.5 else 0
+
+                if predicted_label == target:
+                    correct += 1
+                    
+            elif self.model.classification == "softmax":
+                predicted_label = outputs.index(max(outputs, key=lambda v: v.data))
+
+                if predicted_label == target:
+                    correct += 1
+
+            loss = self.loss_cal(outputs, target)
+            total_loss += loss.data
+
+        accuracy = correct / n
+        avg_loss = total_loss / n
+        
+        if self.model.classification != "none":
+            print(f"Test Accuracy: {accuracy*100:.2f}%, Test Loss: {avg_loss:.4f}")
+            return accuracy, avg_loss
+        else:
+            print(f"Test Loss: {avg_loss:.4f}")
+            return avg_loss
+        
+        
+    
+    
