@@ -90,52 +90,57 @@ class Trainer:
     
         
         
+    
+        
+    
     def test(self, X, y):
         """
         Parameters:
-        X: list of input samples, each sample is a list of Values or floats/ints
-        y: list of target values (0 or 1)
-        
+            X: list of input samples, each sample is a list of Values or floats/ints
+            y: list of target values
         Returns:
-        Test statistics (e.g., accuracy, loss)
+            Test statistics (accuracy, loss) for classification
+            or just loss for regression.
         """
         n = len(X)
-        
         correct = 0
         total_loss = 0.0
-        
-        for i in range(n):
-            inputs = X[i]
-            target = y[i]
 
+        for inputs, target in zip(X, y):
             outputs = self.model.predict(inputs)
-            
-            if self.model.classification == "sigmoid":
-                predicted_prob = outputs[0].data
-                predicted_label = 1 if predicted_prob >= 0.5 else 0
 
-                if predicted_label == target:
-                    correct += 1
-                    
-            elif self.model.classification == "softmax":
-                predicted_label = outputs.index(max(outputs, key=lambda v: v.data))
-
+            # Handle classification cases
+            if self.model.classification != "none":
+                predicted_label = self._get_predicted_label(outputs)
                 if predicted_label == target:
                     correct += 1
 
+            # Compute loss
             loss = self.loss_cal(outputs, target)
             total_loss += loss.data
 
-        accuracy = correct / n
         avg_loss = total_loss / n
-        
+
         if self.model.classification != "none":
+            accuracy = correct / n
             print(f"Test Accuracy: {accuracy*100:.2f}%, Test Loss: {avg_loss:.4f}")
             return accuracy, avg_loss
+
+        # Regression case
+        print(f"Test Loss: {avg_loss:.4f}")
+        return avg_loss 
+    
+
+    def _get_predicted_label(self, outputs):
+        """Return predicted label for sigmoid or softmax classifier."""
+        if self.model.classification == "sigmoid":
+            prob = outputs[0].data
+            return 1 if prob >= 0.5 else 0
+
+        elif self.model.classification == "softmax":
+            return max(range(len(outputs)), key=lambda i: outputs[i].data)
+
         else:
-            print(f"Test Loss: {avg_loss:.4f}")
-            return avg_loss
-        
-        
-    
-    
+            raise ValueError("Unknown classification type")
+
+
