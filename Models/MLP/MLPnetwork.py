@@ -28,11 +28,13 @@ class MLPNetwork:
             for i in range(len(n_neurons))
         ]
 
-    def forward(self, x):
+    def predict(self, x):
         """
-        x can be:
-          - a list of Value
-          - a list/tuple/array of python floats/ints (will be wrapped into Value)
+        Parameters:
+        x: list of input features (floats/ints/Values) with length equal to input_dim
+        
+        Returns:
+        predicted outputs as list of Values
         """
         # If the input dimension does not match, raise error
         if len(x) != self.input_dim:
