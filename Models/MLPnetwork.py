@@ -14,8 +14,10 @@ class MLPNetwork:
         self.input_dim = input_dim
         sizes = [input_dim] + n_neurons
         
-        if n_neurons[-1] > 1 and classification == "sigmoid":
-            raise Warning("Sigmoid classification is only supported for single-output binary classification. For multi-class, use softmax.")
+        if n_neurons[-1] >1 and classification == "sigmoid":
+            raise Warning('Using "sigmoid" classification with more than one output neuron. Only for multi-class classification')
+        
+        
 
         # Build layers: all hidden layers get activation; last layer is linear
         self.layers = [
@@ -50,10 +52,7 @@ class MLPNetwork:
             x = self.softmax(x)
 
         elif self.classification == "sigmoid":
-            # Only support single-output binary classification for now
-            if len(x) != 1:
-                raise Warning("Values correlate to multi-label outputs)")
-            x = [self.sigmoid(x[0])]
+            x = self.sigmoid(x)
 
         return x
 
@@ -81,9 +80,10 @@ class MLPNetwork:
         return [e / total for e in exps]
 
     @staticmethod
-    def sigmoid(x):
-        # x: Value
-        return 1 / (1 + (-x).exp())
+    def sigmoid(vals):
+        # vals: list of values
+        res = [1 / (1 + (-x).exp()) for x in vals]
+        return res
 
     def zero_grad(self):
         """Set all gradients to zero; call before/after each learning step."""

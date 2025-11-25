@@ -25,7 +25,7 @@ Assignment:
 
 Status: Incomplete
 --------------------
-Name:
+Name: Test out data generation with an example data set, to see how well it performs
 
 Description:
 
