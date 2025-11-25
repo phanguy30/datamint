@@ -1,4 +1,4 @@
-from Models.MLP.MLPnetwork import MLPNetwork
+from .MLPnetwork import MLPNetwork
 class MLPGenerator(MLPNetwork):
     def __init__(self, latent_dim, cond_dim, output_dim, hidden_sizes, activation_type="tanh"):
         super().__init__(
