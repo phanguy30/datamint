@@ -5,7 +5,7 @@ import random
 
 
 class Trainer:
-    def __init__(self, model: MLPNetwork, optimizer = SGD(learning_rate=0.01),  epochs=100):
+    def __init__(self, model: MLPNetwork, optimizer = None, loss_fn = None, epochs=100):
         """
         Parameters:
         model: instance of any model (default is MLPNetwork)
@@ -14,24 +14,25 @@ class Trainer:
         optimizer: optimization algorithm to use ("SGD" supported)
         """
         
-        #Default model is MLPNetwork
         self.model = model
-        
-        #Default optimizer is SGD
-        self.optimizer = optimizer  
-        
-        
-        #Set loss calculation based on model classification type
-        if model.classification == "none":
-            self.loss_cal = LinearLoss()
-        elif model.classification == "sigmoid":
-            self.loss_cal = BCELoss()
-        elif model.classification == "softmax":
-            self.loss_cal = CrossEntropyLoss()
-        else:
-            raise ValueError(f"Unknown classification mode: {model.classification}")
-        
+
+        # Initialize optimizer 
+        self.optimizer = optimizer if optimizer is not None else SGD(learning_rate=0.01)
+
+        # Initialize loss 
+        self.loss_fn = loss_fn if loss_fn is not None else LinearLoss()
+
         self.epochs = epochs
+
+        # Logging
+        if model.classification != "none":
+            print(
+                f"Trainer initialized for classification task using {type(self.loss_fn).__name__} loss."
+            )
+        else:
+            print(
+                f"Trainer initialized for regression task using {type(self.loss_fn).__name__} loss."
+            )
 
 
         
@@ -70,7 +71,7 @@ class Trainer:
 
                     outputs = self.model.predict(inputs) 
 
-                    loss = self.loss_cal(outputs, target)
+                    loss = self.loss_fn(outputs, target)
                     batch_losses.append(loss)
                     epoch_loss += loss.data
 
@@ -116,7 +117,7 @@ class Trainer:
                     correct += 1
 
             # Compute loss
-            loss = self.loss_cal(outputs, target)
+            loss = self.loss_fn(outputs, target)
             total_loss += loss.data
 
         avg_loss = total_loss / n
