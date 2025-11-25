@@ -5,7 +5,7 @@ import random
 
 
 class Trainer:
-    def __init__(self, model: MLPNetwork, optimizer = SGD(learning_rate=0.01),  epochs=100):
+    def __init__(self, model: MLPNetwork, optimizer = None, loss_fn = None, epochs=100):
         """
         Parameters:
         model: instance of any model (default is MLPNetwork)
@@ -14,24 +14,25 @@ class Trainer:
         optimizer: optimization algorithm to use ("SGD" supported)
         """
         
-        #Default model is MLPNetwork
         self.model = model
-        
-        #Default optimizer is SGD
-        self.optimizer = optimizer  
-        
-        
-        #Set loss calculation based on model classification type
-        if model.classification == "none":
-            self.loss_cal = LinearLoss()
-        elif model.classification == "sigmoid":
-            self.loss_cal = BCELoss()
-        elif model.classification == "softmax":
-            self.loss_cal = CrossEntropyLoss()
-        else:
-            raise ValueError(f"Unknown classification mode: {model.classification}")
-        
+
+        # Initialize optimizer 
+        self.optimizer = optimizer if optimizer is not None else SGD(learning_rate=0.01)
+
+        # Initialize loss 
+        self.loss_fn = loss_fn if loss_fn is not None else LinearLoss()
+
         self.epochs = epochs
+
+        # Logging
+        if model.classification != "none":
+            print(
+                f"Trainer initialized for classification task using {type(self.loss_fn).__name__} loss."
+            )
+        else:
+            print(
+                f"Trainer initialized for regression task using {type(self.loss_fn).__name__} loss."
+            )
 
 
         
@@ -70,7 +71,7 @@ class Trainer:
 
                     outputs = self.model.predict(inputs) 
 
-                    loss = self.loss_cal(outputs, target)
+                    loss = self.loss_fn(outputs, target)
                     batch_losses.append(loss)
                     epoch_loss += loss.data
 
@@ -87,63 +88,14 @@ class Trainer:
             if (epoch + 1) % 20 == 0 or epoch == 0:
                 print(f"Epoch {epoch+1}/{self.epochs}, Loss: {epoch_loss:.4f}")
     
-    
-        
-        
-    
-        
-    
     def test(self, X, y):
-        """
-        Parameters:
-            X: list of input samples, each sample is a list of Values or floats/ints
-            y: list of target values
-        Returns:
-            Test statistics (accuracy, loss) for classification
-            or just loss for regression.
-        """
-        n = len(X)
-        correct = 0
-        total_loss = 0.0
-
-        for inputs, target in zip(X, y):
-            outputs = self.model.predict(inputs)
-
-            # Handle classification cases
-            if self.model.classification != "none":
-                predicted_label = self._get_predicted_label(outputs)
-                if predicted_label == target:
-                    correct += 1
-
-            # Compute loss
-            loss = self.loss_cal(outputs, target)
-            total_loss += loss.data
-
-        avg_loss = total_loss / n
-
-        if self.model.classification != "none":
-            accuracy = correct / n
-            print(f"Test Accuracy: {accuracy*100:.2f}%, Test Loss: {avg_loss:.4f}")
-            return accuracy, avg_loss
-
-        # Regression case
-        print(f"Test Loss: {avg_loss:.4f}")
-        return avg_loss 
+        from .evaluator import evaluate
+        return evaluate(self.model, X, y, self.loss_fn)
+    
+    
+        
+        
     
 
-    def _get_predicted_label(self, outputs):
-        """Return predicted label for sigmoid or softmax classifier."""
-        if self.model.classification == "sigmoid":
-            prob = outputs[0].data
-            return 1 if prob >= 0.5 else 0
-
-        elif self.model.classification == "softmax":
-        # Convert Value objects to raw numbers
-            probs = [v.data for v in outputs]
-            #return the index of the max probability
-            return probs.index(max(probs))
-
-        else:
-            raise ValueError("Unknown classification type")
 
 
