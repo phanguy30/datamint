@@ -85,7 +85,7 @@ class Trainer:
             # Monitor average loss for the epoch
             epoch_loss /= n
 
-            if (epoch + 1) % 20 == 0 or epoch == 0:
+            if (epoch + 1) % 20 == 0 or epoch == 0 or epoch == self.epochs - 1:
                 print(f"Epoch {epoch+1}/{self.epochs}, Loss: {epoch_loss:.4f}")
     
     def test(self, X, y):

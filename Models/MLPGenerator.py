@@ -42,4 +42,7 @@ class MLPGenerator(MLPNetwork):
             raise ValueError(f"Condition vector length {len(cond_vector)} does not match expected {self.cond_dim}.")
         
         input_vector = self._build_input(latent_vector, cond_vector)
-        return self.predict(input_vector)
+        res = []
+        for i in self.predict(input_vector):
+            res.append(i.data)
+        return res

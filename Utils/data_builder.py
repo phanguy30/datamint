@@ -21,7 +21,7 @@ def build_generator_training_data(X_real, y_labels, latent_dim):
         z = [random.uniform(-1, 1) for _ in range(latent_dim)]
         
         # concat [z, y_onehot] as input
-        inp = z + y_labels
+        inp = z + [y]
 
         X_train.append(inp)
         y_train.append(x)
