@@ -34,7 +34,7 @@ Assignment:
 Status: Incomplete
 
 --------------------
-Name:
+Name: Create a music generator 
 
 Description:
 
