@@ -12,21 +12,22 @@ Datamint is a python program that creates a neural network to generate data. Dat
 
 - Layer.py  - A group of neurons working together to produce an output
 
-- MLPnetwork.py - Several layers stacked to form a simple neural network.We plan to add other pre-trained/customized models that can be used for specific tasks like music generation or synthetic generation.
+- MLPnetwork.py - Several layers stacked to form a simple neural network. We plan to add other pre-trained/customized models that can be used for specific tasks like music generation or synthetic generation.
+
+- MLPGenerator.py - Used to generate the actual network with the user inputs as the dimensions of the network
 
 ### Sub-Package 2 - Trainer
 
+- evaluator.py - this module evaluates the network and prints the losses.
 - Trainer.py - will fit the model using training data, uses helper functions/classes contained in the following sub-folders.
     - Folder 1: Losses Module
         - loss.py - parent class
         - bce_loss.py - binary cross entropy loss
         - ce_loss.py - cross entropy loss function
         - Linear_loss.py  - linear loss function
-- Other loss functions
     - Folder 2: Optimizer Module
         - optimizer.py - parent class
         - SGD.py - stochastic gradient descent
-        Other optimizers
 
 ### Sub-Package 3 - Music Generation
 
