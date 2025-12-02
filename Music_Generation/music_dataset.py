@@ -60,12 +60,48 @@ class MusicDataset(MidiDatasetLoader):
             # flattens it
             rez_x = [v for vec in seq for v in vec]
 
-            # # converts to integer
-            # target_idx = int(np.argmax(target))
+            # converts to integer
+            target_idx = int(np.argmax(target))
 
             out_x.append(rez_x)
-            out_y.append(target)
+            out_y.append(target_idx)
 
         return out_x, out_y
+
+            
+        
+    # def _build_sequences(self, notes,window_size):
+    #     """builds the training dataset as a list of lists. each list is a concatenation of 10 notes making up 1280 input variables
+
+    #     Args:
+    #         notes (list of lists): lists of one hot encoded variables
+    #         window_size (int): size of the context needed to train
+
+    #     Returns:
+    #         out_x,out_y: a list of lists 
+    #     """
+    
+    #     out_x =[]
+    #     out_y =[]     
+        
+        
+        
+        
+    #     for i in range(len(notes) - window_size):
+    #         seq = notes[i:i+window_size]
+    #         target = notes[i+window_size]
+    #         rez_x =[]
+    #         for thing in seq:
+    #             for note in thing:
+    #                 rez_x.append(note)
+    #         for thing_2 in target:
+    #             out_y.append(int(thing_2))
+    #         out_x.append(rez_x)
+            
+
+            
+
+    #     return out_x,out_y
+    
 
     
