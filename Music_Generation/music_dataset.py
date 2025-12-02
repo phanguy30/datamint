@@ -47,26 +47,25 @@ class MusicDataset(MidiDatasetLoader):
                 
                 
         return encoded_songs
-            
-        
-    def _build_sequences(self, notes,window_size):
     
-        out_x =[]
-        out_y =[]     
-        
-        
-        
+    def _build_sequences(self, notes, window_size):
+
+        out_x = []
+        out_y = []
+
         for i in range(len(notes) - window_size):
-            rez_x =[]
-            rez_y =[] 
-            for j in range(window_size):
-                seq = notes[i:i+window_size]
-                target = notes[i+window_size]
-                rez_x.append(seq)
-                rez_y.append(target)
+            seq = notes[i:i + window_size]
+            target = notes[i + window_size]
+            
+            # flattens it
+            rez_x = [v for vec in seq for v in vec]
+
+            # converts to integer
+            target_idx = int(np.argmax(target))
+
             out_x.append(rez_x)
-            out_y.append(rez_y)
-        return out_x,out_y
-    
+            out_y.append(target_idx)
+
+        return out_x, out_y
 
     

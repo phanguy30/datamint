@@ -12,8 +12,7 @@ trainer = MusicTrainer(model)
 #"C:\Users\preet\Documents\DATA533\test_folder"
 
 test = MusicDataset('C:/Users/preet/Documents/DATA533/datamint/test_folder')
-print(len(test.out_x[0][0][0]))
-
+print(len(test.out_x[0][0]))
 print(len(test.out_y))
 
 # flattened = [[x for vec in sublist for x in vec] for sublist in test.out_x]
@@ -25,5 +24,4 @@ print(len(test.out_y))
 # print(len(test.out[1]))
 
 
-# trainer.fit(test.out_x,test.out_y)
 
