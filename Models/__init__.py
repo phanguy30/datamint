@@ -1,3 +1,3 @@
 from .MLPnetwork import MLPNetwork
-from .MLPGenerator import MLPGenerator
+from .MLPMusicGen import MLPMusicGen
 from .Value import Value
