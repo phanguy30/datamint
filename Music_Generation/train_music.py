@@ -1,5 +1,5 @@
-from ..Trainer.trainer import Trainer
-from music_dataset import MusicDataset
+from Trainer import Trainer
+from .music_dataset import MusicDataset
 from Models import MLPNetwork
 from Trainer.losses import LinearLoss
 from Trainer.optimizer import SGD
