@@ -60,11 +60,11 @@ class MusicDataset(MidiDatasetLoader):
             # flattens it
             rez_x = [v for vec in seq for v in vec]
 
-            # converts to integer
-            target_idx = int(np.argmax(target))
+            # # converts to integer
+            # target_idx = int(np.argmax(target))
 
             out_x.append(rez_x)
-            out_y.append(target_idx)
+            out_y.append(target)
 
         return out_x, out_y
 
