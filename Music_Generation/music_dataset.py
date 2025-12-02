@@ -3,7 +3,7 @@ from .midi_to_dataset import MidiDatasetLoader
 import numpy as np
 
 class MusicDataset(MidiDatasetLoader):
-    def __init__(self,folder_path,window_size=16,shuffle=True,seed=42):
+    def __init__(self,folder_path,window_size=10,shuffle=True,seed=42):
         """
         Args:
             folder_path (path): folder of midi files
@@ -26,44 +26,43 @@ class MusicDataset(MidiDatasetLoader):
         
         if shuffle:
             random.seed(seed)
-            indices = list(range(len(x)))
+            indices = list(range(len(self.x)))
             random.shuffle(indices)
-            x =[x[i] for i in indices]
-            y =[x[i] for i in indices]
+            x =[self.x[i] for i in indices]
+            y =[self.x[i] for i in indices]
             
         self.x = x
         self.y = y
             
         
-        def _build_sequences(self, songs,window_size):
-            x,y = [],[]
-            
-            for song in songs:
-                # assert that the window_size has to larger than the song
-                
-                
-                for i in range(len(song) -window_size):
-                    seq = song[i:i+window_size]
-                    target = song[i+window_size]
-                    x.append(seq)
-                    y.append(target)
-                    
-            return x,y
+    def _build_sequences(self, songs,window_size):
+        x,y = [],[]
         
-        def _convert_to_one_hot_encoder(self, x,y):
-            encoded_x=[]
-            encoded_y = []
+        for song in songs:
+            # assert that the window_size has to larger than the song
             
             
-            for section in x:
-                for note in section:
-                    I = list(np.eye(128))
-                    encoded_x.append(I[note])
-            
-            for section_out in y:
-                for note_out in section_out:
-                    I = list(np.eye(128))
-                    encoded_y.append(I[note_out])
-                    
-            return encoded_x,encoded_y
+            for i in range(len(song) -window_size):
+                seq = song[i:i+window_size]
+                target = song[i+window_size]
+                x.append(seq)
+                y.append(target)
+                
+        return x,y
+    
+    def _convert_to_one_hot_encoder(self, x,y):
+        encoded_x=[]
+        encoded_y = []
+        
+        
+        for section in x:
+            for note in section:
+                I = np.eye(128)
+                encoded_x.append(list(I[note]))
+        
+        for section_out in y:
+            I = list(np.eye(128))
+            encoded_y.append(list(I[section_out]))
+                
+        return encoded_x,encoded_y
             
