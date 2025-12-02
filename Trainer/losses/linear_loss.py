@@ -17,5 +17,5 @@ class LinearLoss(Loss):
 
         return loss / d
     
-    from Models.MLP.Value import Value  # adjust import if needed
+
 
