@@ -1,7 +1,7 @@
 from .MLPnetwork import MLPNetwork
 import numpy as np
 class MLPMusicGen(MLPNetwork):
-    def __init__(self, context_length, hidden_sizes, activation_type="tanh"):
+    def __init__(self, context_length =10, hidden_sizes = [64,64], activation_type="tanh"):
         super().__init__(
             input_dim= context_length*128,
             n_neurons= hidden_sizes + [128],
