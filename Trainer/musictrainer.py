@@ -1,7 +1,7 @@
 import numpy as np
-from trainer import Trainer
+from . import Trainer
 from Models.MLPMusicGen import MLPMusicGen
-from losses import CrossEntropyLoss
+from .losses import *
 
 
 class MusicTrainer(Trainer):
