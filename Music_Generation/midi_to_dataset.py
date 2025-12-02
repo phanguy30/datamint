@@ -7,7 +7,7 @@ class MidiDatasetLoader:
         
         self.songs = self._load_all_songs()
         
-    def _load_all_songsse(self):
+    def _load_all_songs(self):
         songs = []
         midi_files = self._get_midi_files()
         

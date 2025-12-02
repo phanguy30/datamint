@@ -1,12 +1,12 @@
 import random
-from midi_to_dataset import MidiDatasetLoader
+from .midi_to_dataset import MidiDatasetLoader
 import numpy as np
 
 class MusicDataset(MidiDatasetLoader):
-    def __init__(self,folder_path,window_size=16,shuffle=True,seed=42,train_ratio = 0.8):
+    def __init__(self,folder_path,window_size=16,shuffle=True,seed=42):
         """
         Args:
-            songs (list): list of song,each song is a list of ints
+            folder_path (path): folder of midi files
             window_size (int, optional): length of input sequence. Defaults to 16.
             shuffle (bool, optional): if the data should be shuffled or not. Defaults to True.
             seed (int, optional): set seed for reproducibility. Defaults to 42.
