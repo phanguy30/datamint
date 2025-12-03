@@ -45,14 +45,26 @@ class MLPMusicGen(MLPNetwork):
 
             Returns: a list of sequence of notes with length at most `max_len`
             """
-        file_name = input("Input a song in midi format as inspiration")
-        song_part = input("How much of the song do you want to use")
+        file_name = input("Input a song in MIDI format as inspiration: ")
+
+        song_part = input("How much of the song do you want to use (0–1)? ")
+        try:
+            song_part = float(song_part)
+            assert 0 < song_part <= 1
+        except:
+            raise ValueError("Please enter a number between 0 and 1.")
+
+        # Load notes
         seed = self.get_midi_file_notes(file_name)
-        seed = seed[:int(len(seed)*song_part)]
-        
-        assert(len(seed) >= self.context_length)
-        
-        
+
+        # Take the first fraction of the song
+        cutoff = int(len(seed) * song_part)
+        seed = seed[:cutoff]
+
+        # Ensure context is long enough
+        assert len(seed) >= self.context_length, \
+            "Not enough notes for your chosen context length."
+                
 
         generated = seed #tracking the number of notes
         while len(generated) < max_len:
