@@ -17,6 +17,8 @@ It contains modular MLP components, training utilities, and a complete pipeline 
 
 - MLPMusicGen.py - Inherits MLPnetwork.py. Creates an MLP specific to music generation. Has an additional function call generate_piece that ask the user for a seed/context of music and generate a piece of music of fix length
 
+- Analysis.py - analyzes the distribution of the notes output by our network (in the music generation branch)
+
 ### Sub-Package 2 - Trainer
 
 - evaluator.py - this module contains helper function to evaluate the model
