@@ -1,5 +1,6 @@
 from .MLPnetwork import MLPNetwork
 import numpy as np
+from mido import MidiFile, MidiTrack, Message
 class MLPMusicGen(MLPNetwork):
     def __init__(self, context_length =10, hidden_sizes = [64,64], activation_type="tanh"):
         super().__init__(
@@ -35,26 +36,23 @@ class MLPMusicGen(MLPNetwork):
 
     
     
-    def generate_piece(self,seed, max_len=100):
+    def generate_piece(self,max_len=100):
         """
-        Generate a piece of music given the model and an initial
-        "seed" sequence of notes at the beginning of the piece.
-
-        The piece is generated one note at a time by using, as input
-        to the model, the previous 20 notes. The model outputs a
-        probability distribution over the next possible note, and we
-        will take the most probable note as the next note in our piece.
+        Generate a piece of music after asking the user for a inspiration piece 
 
         Parameters:
-            `model` - an instance of MLPModel
-            `seed` - a sequence of notes at the beginning of a piece,
-                    e.g. generated from calling `get_midi_file_notes`
-                    must be at least as long as CONTEXT_LENGTH
             `max_len` - maximum number of total notes in the piece.
 
             Returns: a list of sequence of notes with length at most `max_len`
             """
+        file_name = input("Input a song in midi format as inspiration")
+        song_part = input("How much of the song do you want to use")
+        seed = self.get_midi_file_notes(file_name)
+        seed = seed[:int(len(seed)*song_part)]
+        
         assert(len(seed) >= self.context_length)
+        
+        
 
         generated = seed #tracking the number of notes
         while len(generated) < max_len:
@@ -90,3 +88,14 @@ class MLPMusicGen(MLPNetwork):
     
     
     
+    def get_midi_file_notes(self,filename):
+        """Returns the sequence of notes played in the midi file
+        There are 128 possible notes on a MIDI device, and they are numbered 0 to 127.
+        The middle C is note number 60. Larger numbers indiciate higher pitch notes,
+        and lower numbers indicate lower pitch notes.
+        """
+        notes = []
+        for msg in  MidiFile(filename):
+            if msg.type == 'note_on':
+                notes.append(msg.note)
+        return notes
