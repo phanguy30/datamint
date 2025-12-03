@@ -19,7 +19,7 @@ It contains modular MLP components, training utilities, and a complete pipeline 
 
 ### Sub-Package 2 - Trainer
 
-- evaluator.py - this module evaluates the network and prints the losses.
+- evaluator.py - this module contains helper function to evaluate the model
 - Trainer.py - will fit the model using training data, uses helper functions/classes contained in the following sub-folders.
     - Folder 1: Losses Module
         - loss.py - parent class
