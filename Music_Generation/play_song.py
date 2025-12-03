@@ -10,14 +10,13 @@ class PlaySong:
         
         self.notes = notes
         self.name_of_file =name_of_file
-        self.generate_midi(self.notes)
+        self.generate_midi(self.notes,self.name_of_file)
         self.play_midi(self.name_of_file)
         
-        # def __call__()
         
         
          
-    def generate_midi(notes, name_of_file):
+    def generate_midi(self,notes, name_of_file):
 
 
         new_mid = MidiFile()
@@ -30,7 +29,7 @@ class PlaySong:
 
 
 
-    def play_midi(name_of_file):
+    def play_midi(self,name_of_file):
         pygame.mixer.init()
         pygame.mixer.music.load(name_of_file)
         pygame.mixer.music.play()
