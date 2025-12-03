@@ -1,7 +1,8 @@
 import random
+from midi_to_dataset import MidiDatasetLoader
 
-class MusicDataset():
-    def __init__(self,songs,window_size=16,shuffle=True,seed=42,train_ratio = 0.8):
+class MusicDataset(MidiDatasetLoader):
+    def __init__(self,folder_path,window_size=16,shuffle=True,seed=42,train_ratio = 0.8):
         """
         Args:
             songs (list): list of song,each song is a list of ints
@@ -10,12 +11,14 @@ class MusicDataset():
             seed (int, optional): set seed for reproducibility. Defaults to 42.
         """
         
+        
         self.window_size= window_size
-        self.songs = songs
         self.shuffle = shuffle
         self.seed= seed
         
-        x,y = self._build_sequences(songs,window_size)
+        super().__init__(folder_path)
+        
+        x,y = self._build_sequences(self.songs,window_size)
         
         
         
