@@ -2,7 +2,8 @@
 
 ## Overview
 
-Datamint is a python program that creates a neural network to generate data. Datamint functions by using a neural network class and creating a multi layer perceptron using the training class to generate music data. 
+Datamint is a lightweight Python library for music generation built on a fully custom neural-network engine, inspired by the micrograd repo by Andrej Karpathy  
+It contains modular MLP components, training utilities, and a complete pipeline for preparing MIDI data to train a model to generate new music.
 
 ### Sub-Package 1 - Models
 
@@ -12,9 +13,9 @@ Datamint is a python program that creates a neural network to generate data. Dat
 
 - Layer.py  - A group of neurons working together to produce an output
 
-- MLPnetwork.py - Several layers stacked to form a simple neural network. We plan to add other pre-trained/customized models that can be used for specific tasks like music generation or synthetic generation.
+- MLPnetwork.py  - Builds a multilayer perceptron by stacking layers. Handles forward passes and supports classification or regression depending on configuration.
 
-- MLPGenerator.py - Used to generate the actual network with the user inputs as the dimensions of the network
+- MLPMusicGen.py - Inherits MLPnetwork.py. Creates an MLP specific to music generation. Has an additional function call generate_piece that ask the user for a seed/context of music and generate a piece of music of fix length
 
 ### Sub-Package 2 - Trainer
 
@@ -31,8 +32,12 @@ Datamint is a python program that creates a neural network to generate data. Dat
 
 ### Sub-Package 3 - Music Generation
 
-- Input_Trainer.py - takes a dataframe. The user specifies the independent and dependant variables and initializes a trainer
+This package provides the complete pipeline for preparing MIDI data, building datasets, and generating or playing music.
 
-- Data_Generation.py - creates a synthetic dataset similar to the user's     original dataset. 
+- midi_to_dataset.py - Utilities for loading MIDI files and extracting note sequences.  
 
-- Output_statistics.py - compares the initial dataset to the generated  dataset and provides simple statistics
+
+- music_dataset.py  - Main class that allow the user to input a folder containing midi files and generate a dataset including (features: context-notes) and targets (next note)
+
+
+- play_song.py  - Once the model generate notes, the user then can initialize this class with the notes, and music will play. 
