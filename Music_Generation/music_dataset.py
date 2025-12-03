@@ -33,7 +33,7 @@ class MusicDataset(MidiDatasetLoader):
         """
         songs: list of songs, each song is a list[int] of note ids
         returns:
-            X: list[list[int]]  
+            X: list[list[int]], where each inner list contains notes equal to the context_length
             Y: list[int]        
         """
         X, Y = [], []

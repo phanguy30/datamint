@@ -39,6 +39,7 @@ class MLPMusicGen(MLPNetwork):
     def generate_piece(self,max_len=100):
         """
         Generate a piece of music after asking the user for a inspiration piece 
+        The user can specify how much portion of the generation piece they want to use
 
         Parameters:
             `max_len` - maximum number of total notes in the piece.
@@ -70,7 +71,7 @@ class MLPMusicGen(MLPNetwork):
         while len(generated) < max_len:
             # Use the model to predict the next note given the previous CONTEXT_LENGTH notes
             last_n_notes = generated[-self.context_length:]
-            x = self._make_onehot(last_n_notes).reshape((1, -1))
+            x = self._make_onehot(last_n_notes).reshape((1, -1)) #concat all the notes
             x = x.flatten().tolist()
 
             y = self.predict(x) # return a list of probabilities for the best next notes
@@ -90,7 +91,7 @@ class MLPMusicGen(MLPNetwork):
         """
         Override predict so that:
         - x can be a nested list (list of lists, etc.)
-        - we flatten it automatically before calling parent.predict()
+        - flatten it automatically before calling parent.predict()
         """
         # Convert to numpy array so we can flatten cleanly
         x = np.array(x).flatten().tolist()
