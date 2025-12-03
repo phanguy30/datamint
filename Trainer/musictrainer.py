@@ -1,7 +1,7 @@
 import numpy as np
-from trainer import Trainer
+from .trainer import Trainer
 from Models.MLPMusicGen import MLPMusicGen
-from losses import CrossEntropyLoss
+from .losses import *
 
 
 class MusicTrainer(Trainer):
@@ -10,7 +10,7 @@ class MusicTrainer(Trainer):
     Uses sequences of integer notes and trains on (context_length -> next_note) pairs.
     """
 
-    def __init__(self, model: MLPMusicGen, epochs: int = 10):
+    def __init__(self, model: MLPMusicGen, epochs = 10):
         # Use CrossEntropyLoss by default for classification
         super().__init__(model=model,
                          optimizer=None,              
@@ -19,4 +19,4 @@ class MusicTrainer(Trainer):
         
         
         
-        
+            

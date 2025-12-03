@@ -76,4 +76,17 @@ class MLPMusicGen(MLPNetwork):
         return generated
     
     
+    def predict(self, x):
+        """
+        Override predict so that:
+        - x can be a nested list (list of lists, etc.)
+        - we flatten it automatically before calling parent.predict()
+        """
+        # Convert to numpy array so we can flatten cleanly
+        x = np.array(x).flatten().tolist()
+
+        # Call parent MLPNetwork.predict
+        return super().predict(x)
+    
+    
     

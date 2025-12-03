@@ -3,66 +3,65 @@ from .midi_to_dataset import MidiDatasetLoader
 import numpy as np
 
 class MusicDataset(MidiDatasetLoader):
-    def __init__(self,folder_path,window_size=10,shuffle=True,seed=42):
-        """
-        Args:
-            folder_path (path): folder of midi files
-            window_size (int, optional): length of input sequence. Defaults to 16.
-            shuffle (bool, optional): if the data should be shuffled or not. Defaults to True.
-            seed (int, optional): set seed for reproducibility. Defaults to 42.
-        """
-        
-        
-        self.window_size= window_size
+    def __init__(self, folder_path, context_length=10, shuffle=True, seed=42):
+        self.context_length = context_length
         self.shuffle = shuffle
-        self.seed= seed
-        
-        super().__init__(folder_path)
-        
-        self.x,self.y = self._build_sequences(self.songs,window_size)
-        self.encoded_x,self.encoded_y= self._convert_to_one_hot_encoder(self.x,self.y)
-        
-        
-        
+        self.seed = seed
+
+        super().__init__(folder_path)   # must set self.songs as list[list[int]]
+
+        # Build sequences from all songs
+        self.x, self.y = self._build_sequences(self.songs, context_length)
+        # self.x: list[list[int]]
+        # self.y: list[int]
+
+        # One-hot encode inputs + targets
+        self.encoded_x = self._one_hot(self.x)       # shape (N, context_length, 128)
+        self.encoded_y = np.array(self.y)            # shape (N,)
+
         if shuffle:
             random.seed(seed)
             indices = list(range(len(self.x)))
             random.shuffle(indices)
-            x =[self.x[i] for i in indices]
-            y =[self.x[i] for i in indices]
-            
-        self.x = x
-        self.y = y
-            
-        
-    def _build_sequences(self, songs,window_size):
-        x,y = [],[]
-        
-        for song in songs:
-            # assert that the window_size has to larger than the song
-            
-            
-            for i in range(len(song) -window_size):
-                seq = song[i:i+window_size]
-                target = song[i+window_size]
-                x.append(seq)
-                y.append(target)
-                
-        return x,y
+
+            self.x         = [self.x[i] for i in indices]
+            self.y         = [self.y[i] for i in indices]
+            self.encoded_x = self.encoded_x[indices]
+            self.encoded_y = self.encoded_y[indices]
+
+    def _build_sequences(self, songs, context_length):
+        """
+        songs: list of songs, each song is a list[int] of note ids
+        returns:
+            X: list[list[int]]  
+            Y: list[int]        
+        """
+        X, Y = [], []
+
+        for song in songs:   # song is a list[int]
+            if len(song) <= context_length:
+                continue
+
+            # sliding windows inside this single song
+            for i in range(len(song) - context_length):
+                seq       = song[i:i+context_length]     # a list[int]
+                next_note = song[i+context_length]       # an int
+                X.append(seq)
+                Y.append(next_note)
+
+            # End-of-song token
+            X.append(song[-context_length:])
+            Y.append(0)
+
+        return X, Y
+
+    def _one_hot(self, x):
+        """
+        x: list[list[int]] of note ids
+        returns: np.array of shape (N, context_length, 128)
+        """
+        I = np.eye(128, dtype=np.float32)
+        # For each sequence, map each note id to its one-hot row
+        return np.array([I[np.array(seq)] for seq in x])
     
-    def _convert_to_one_hot_encoder(self, x,y):
-        encoded_x=[]
-        encoded_y = []
-        
-        
-        for section in x:
-            for note in section:
-                I = np.eye(128)
-                encoded_x.append(list(I[note]))
-        
-        for section_out in y:
-            I = list(np.eye(128))
-            encoded_y.append(list(I[section_out]))
-                
-        return encoded_x,encoded_y
-            
+    
