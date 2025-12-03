@@ -44,4 +44,4 @@ This package provides the complete pipeline for preparing MIDI data, building da
 
 - play_song.py  - Once the model generate notes, the user then can initialize this class with the notes, and music will play.
 
-Example.ipynb provides an example on how to use this package
+Example.ipynb provides an example on how to use this package and the oputput file untrained_Test.mid is the output midifile of our network after training.
