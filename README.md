@@ -16,9 +16,7 @@ It contains modular MLP components, training utilities, and a complete pipeline 
 - MLPnetwork.py  - Builds a multilayer perceptron by stacking layers. Handles forward passes and supports classification or regression depending on configuration.
 
 - MLPMusicGen.py - Inherits MLPnetwork.py. Creates an MLP specific to music generation. Has an additional function call generate_piece that ask the user for a seed/context of music and generate a piece of music of fix length
-
-- Analysis.py - analyzes the distribution of the notes output by our network (in the music generation branch)
-
+- 
 ### Sub-Package 2 - Trainer
 
 - evaluator.py - this module contains helper function to evaluate the model
@@ -43,5 +41,8 @@ This package provides the complete pipeline for preparing MIDI data, building da
 
 
 - play_song.py  - Once the model generate notes, the user then can initialize this class with the notes, and music will play.
+
+- Analysis.py - analyzes the distribution of the notes output by our network (in the music generation branch)
+
 
 Example.ipynb provides an example on how to use this package and the oputput file untrained_Test.mid is the output midifile of our network after training.
