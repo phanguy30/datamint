@@ -6,6 +6,9 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from Models.MLPMusicGen import MLPMusicGen
 
 class TrainedMusicGen(MLPMusicGen):
+    """
+    Creating a model with 100 hidden units and loading pre-trained parameters
+    """
     def __init__(self, model_path = "Models/param.txt"):
         super().__init__(context_length=20, hidden_sizes= [100], activation_type="relu")
         self.load_model(model_path)
