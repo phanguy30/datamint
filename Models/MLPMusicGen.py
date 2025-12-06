@@ -46,17 +46,24 @@ class MLPMusicGen(MLPNetwork):
 
             Returns: a list of sequence of notes with length at most `max_len`
             """
-        file_name = input("Input a song in MIDI format as inspiration: ")
-
-        song_part = input("How much of the song do you want to use (0–1)? ")
+        # Load notes    
         try:
+            file_name = input("Input a song in MIDI format as inspiration: ")
+            seed = self.get_midi_file_notes(file_name)
+        except Exception as e:
+            print(f"Error loading MIDI file: {e}")
+            return []
+
+        # Ask user how much of the song to use as seed
+        try:
+            song_part = input("How much of the song do you want to use (0–1)? ")
             song_part = float(song_part)
             assert 0 < song_part <= 1
         except:
             raise ValueError("Please enter a number between 0 and 1.")
 
-        # Load notes
-        seed = self.get_midi_file_notes(file_name)
+        
+        
 
         # Take the first fraction of the song
         cutoff = int(len(seed) * song_part)
