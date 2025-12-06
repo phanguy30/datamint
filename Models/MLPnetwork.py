@@ -14,10 +14,6 @@ class MLPNetwork:
         self.input_dim = input_dim
         sizes = [input_dim] + n_neurons
         
-        if n_neurons[-1] >1 and classification == "sigmoid":
-            raise Warning('Using "sigmoid" classification with more than one output neuron. Only for multi-class classification')
-        
-        
 
         # Build layers: all hidden layers get activation; last layer is linear
         self.layers = [
