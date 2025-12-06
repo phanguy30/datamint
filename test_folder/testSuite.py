@@ -12,8 +12,7 @@ from test_folder.analysis_test import TestMusicAnalysis
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.TestLoader().loadTestsFromTestCase(TestMusicAnalysis))
-    return suite
-
-if __name__ == '__main__':
     runner = unittest.TextTestRunner()
-    runner.run(suite())
+    print(runner.run(suite))
+
+suite()
