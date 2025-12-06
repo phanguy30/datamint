@@ -4,12 +4,12 @@ from collections import Counter
 import matplotlib.pyplot as plt
 
 #Twinkle Twinkle Little Star MIDI note values
-# test_data = [60, 60, 67, 67, 69, 69, 67,65, 65, 64, 64, 62, 62, 60,
-#     67, 67, 65, 65, 64, 64, 62,67, 67, 65, 65, 64, 64, 62,60, 60, 67, 67, 69, 69, 67,
-#     65, 65, 64, 64, 62, 62, 60, 67, 67, 74, 74, 76, 76, 74,72, 72, 71, 71, 69, 69, 67,
-#     74, 74, 72, 72, 71, 71, 69, 74, 74, 72, 72, 71, 71, 69,67, 67, 74, 74, 76, 76, 74,
-#     72, 72, 71, 71, 69, 69, 67,74, 74, 72, 72, 71, 71, 69,74, 74, 72, 72, 71, 71, 69,
-#     67, 67, 74, 74, 76, 76, 74, 72, 72, 71, 71, 69, 69, 67]
+test_data = [60, 60, 67, 67, 69, 69, 67,65, 65, 64, 64, 62, 62, 60,
+    67, 67, 65, 65, 64, 64, 62,67, 67, 65, 65, 64, 64, 62,60, 60, 67, 67, 69, 69, 67,
+    65, 65, 64, 64, 62, 62, 60, 67, 67, 74, 74, 76, 76, 74,72, 72, 71, 71, 69, 69, 67,
+    74, 74, 72, 72, 71, 71, 69, 74, 74, 72, 72, 71, 71, 69,67, 67, 74, 74, 76, 76, 74,
+    72, 72, 71, 71, 69, 69, 67,74, 74, 72, 72, 71, 71, 69,74, 74, 72, 72, 71, 71, 69,
+    67, 67, 74, 74, 76, 76, 74, 72, 72, 71, 71, 69, 69, 67]
 
 class MusicAnalysis:
 
@@ -89,9 +89,9 @@ class MusicAnalysis:
         plt.tight_layout()
         plt.show()
 
-# music = MusicAnalysis(test_data)
-# music.count_notes()
-# music.riffs()
-# music.pitch()
-# music.plot_music()
-# music.counts_plot()
+music = MusicAnalysis(test_data)
+music.count_notes()
+music.riffs()
+music.pitch()
+music.plot_music()
+music.counts_plot()
